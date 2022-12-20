@@ -4,12 +4,7 @@ author: "Joseph Roy"
 date: "2022-12-20"
 output: html_document
 ---
-#language       R                                
-#version.string R version 4.2.0 (2022-04-22 ucrt)
-#nickname       Vigorous Calisthenics 
-
-
-### Getting data for Lion tailed Macaque distribution data from GBIF- Global Biodiversity Information Facility
+### Getting data for LTM from GBIF- Global Biodiversity Information Facility
 
 
 ```{r}
