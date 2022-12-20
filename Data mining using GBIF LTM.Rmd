@@ -4,7 +4,7 @@ author: "Joseph Roy"
 date: "2022-12-20"
 output: html_document
 ---
-### Getting data for LTM from GBIF- Global Biodiversity Information Facility
+### Getting data for Lion tailed Macaque distribution data from GBIF- Global Biodiversity Information Facility
 
 
 ```{r}
