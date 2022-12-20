@@ -1,0 +1,98 @@
+---
+title: "LTM Distribution"
+author: "Joseph Roy"
+date: "2022-12-20"
+output: html_document
+---
+### Getting data for LTM from GBIF- Global Biodiversity Information Facility
+
+
+```{r}
+library(rgbif) #global biodiversity information framework
+library(mapview) #plotting spatial data 
+#library(scrubr) #clean spatial data- discontuiued
+library(sp) #convert spatial data to spatial object 
+library(dplyr) 
+```
+- Making a key for species- Macaca silenus
+```{r}
+key <- name_suggest(q='Macaca silenus', 
+                    rank='species')$data$key[1]
+```
+
+- using occ_search from gbif package just to see the count of observations
+
+```{r}
+occ_search(taxonKey=key, limit=0)$meta$count
+```
+- now actual search using the key, used limit to limit the maximum number of observation to 200
+
+```{r}
+spdat.test <- occ_search(taxonKey = key, 
+                         return = "data", limit = 200)
+```
+
+- extracting data from the whole
+```{r}
+spdat.test <- spdat.test$data
+```
+
+- removing values other than from India
+
+```{r}
+spdat.test1 <- subset(spdat.test, 
+                  country == "India")
+```
+
+- sub-setting lat long and species using dplyr command select
+```{r}
+dat.test <- select(spdat.test1, 
+                   decimalLongitude, decimalLatitude, species)
+```
+
+- renaming columns 
+```{r}
+colnames(dat.test) <- c("longitude", "latitude", "species")
+```
+
+- removing NAs
+```{r}
+dat.test <- na.omit(dat.test)
+```
+
+these line is from scruber which is now discontinued
+need to find something like that which could work
+used to clean the gps data 
+dat.test<-dframe(dat.test) %>% coord_impossible()
+dat.test<-dframe(dat.test) %>% coord_unlikely()
+
+
+- converting the lat long to spatial points
+proj4string = CRS("+init=epsg:4326") is the fromat of the data 
+```{r}
+sp.test <- SpatialPoints(coords = cbind(dat.test$longitude, dat.test$latitude),
+                         proj4string = CRS("+init=epsg:4326"))
+```
+
+- adding secies to spatial points (sp package)
+```{r}
+sp.test$species <- dat.test$species
+```
+
+- using mapview to plot the points
+```{r echo=FALSE}
+mapview(sp.test, color="green")
+```
+
+
+- let's save the spdat.test data as a csv file 
+- In case we want to use it later without having to re-download them all!
+
+```{r}
+write.csv(spdat.test, "GBIF_data.csv")
+
+?mapview
+```
+
+
+
